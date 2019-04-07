@@ -28,6 +28,16 @@ def does_friendship_exist(friend_a, friend_b, friendship_list):
 def does_user_exist(user, friendship_list):
     return any(x.friend_a == user or x.friend_b == user for x in friendship_list)
 
+# Function for getting a friendship's weight from the friendship list we've defined
+# within this program. If exists, return weight. If doesn't exist, return -1, since
+# we expect an integer, and the only allowable weights are 1-10.
+def get_friendship_weight(friend_a, friend_b, friendship_list):
+    if does_friendship_exist(friend_a, friend_b, friendship_list):
+        index = friendship_list.index(Friendship(friend_a, friend_b, -1))
+        return friendship_list[index].weight
+    else:
+        return -1
+
 # Main function
 def main(infile):
     friendship_list = read_matrix_to_list(infile)
@@ -35,8 +45,17 @@ def main(infile):
     if DEBUG:
         for each in friendship_list:
             print(each)
+        print('\t CHECK FOR FRIENDSHIP EXISTS')
         print(does_friendship_exist("Jason", "Depalma", friendship_list))
         print(does_friendship_exist("Jacob", "Emily", friendship_list))
+        print("\t CHECK FOR USER EXISTS")
+        print(does_user_exist("Jason", friendship_list))
+        print(does_user_exist("Depalma", friendship_list))
+        print(does_user_exist("Louis", friendship_list))
+        print(does_user_exist("Ella", friendship_list))
+        print("\t CHECK FOR FRIENDSHIP WEIGHTS")
+        print(get_friendship_weight("Jason", "Depalma", friendship_list))
+        print(get_friendship_weight("Depalma", "Jason", friendship_list))
 
 
 if __name__ == "__main__":
