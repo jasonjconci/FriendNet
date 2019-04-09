@@ -14,7 +14,7 @@
 #
 # ---- ANSWERS TO PATH TRAVERSAL + 2 KILLER FEATURES ----
 #
-# Since both Daniel and Jason are taking Networking right now, we've decided to go with
+# Since we are taking Networking right now, we've decided to go with
 # Dijkstra for the friendliest-path algorithm. We originally wanted to go with A*, but being
 # that we can't come up with an admissable distance heuristic, we're deciding to go with
 # old fashioned Dijkstra. Makes sense since each "node" knows the costs of every other "edge",
