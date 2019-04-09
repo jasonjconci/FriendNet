@@ -5,9 +5,9 @@ class Friendship:
     friend_b = ""
     weight = 0
     def __init__(self, friend_a, friend_b, weight):
-        self.friend_a = friend_a
-        self.friend_b = friend_b
-        self.weight = weight
+        self.friend_a = str(friend_a)
+        self.friend_b = str(friend_b)
+        self.weight = int(weight)
     
     def __eq__(self, other):
         return self.friend_a == other.friend_a and self.friend_b == other.friend_b

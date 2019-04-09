@@ -5,6 +5,8 @@
 import sys
 import random
 
+# Should be a command line arg
+multiplier = 3
 
 def read_infile_to_list(infile):
     opened = open(infile, 'r')
@@ -19,10 +21,10 @@ def get_random(lst):
 
 def main(infile):
     name_list = read_infile_to_list(infile)
-    outfile = open("matrix_new.txt", "w")
+    outfile = open(infile + "_matrix.txt", "w")
     # We're keeping track of already used pairs in list-of-tuple
     used_pairs = []
-    for _ in range(len(name_list)*3):
+    for _ in range(len(name_list)*multiplier):
         # Get random people
         friend_one = get_random(name_list)
         friend_two = get_random(name_list)
