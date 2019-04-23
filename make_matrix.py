@@ -8,6 +8,16 @@ import random
 # Should be a command line arg
 multiplier = 3
 
+
+def clean_infile(infile):
+    pre = open(infile, 'r')
+    post = open(infile + "_cleaned" + infile[infile.rfind('.'):], "w")
+    pre_all_string = pre.read().replace('\n', '')
+    pre_all_replace_num = [i for i in pre_all_string.split() if not i.isdigit()]
+    for name in pre_all_replace_num:
+        post.write(name + '\n')
+
+
 def read_infile_to_list(infile):
     opened = open(infile, 'r')
     name_list = []

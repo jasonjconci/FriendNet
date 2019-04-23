@@ -3,10 +3,14 @@
 from friendship import Friendship
 
 def setup_matrix(person_list, friends_list, source):
+    # Initialize matrix
     matrix = {i: 0 for i in person_list}
+    # Other setup work
     assert source in person_list, "Nonexistent person in the network!"
     del matrix[source]
     S = [ source ]
+    # Initialize all nodes in matrix, if (source -> node) exists, set the correct
+    # path weight and predecessor
     for person in person_list:
         if person == source:
             continue
@@ -20,11 +24,21 @@ def setup_matrix(person_list, friends_list, source):
             matrix[person] = (float('-inf'), '\0')
     return source, matrix, S
 
-def algorithm(matrix, S, person_list, friends_list):
-    while(len(S) != len(person_list)):
-        # This is the part where we set our costs
+def algorithm(matrix, S, person_list, friends_list, destination):
+    print(destination)
+    # While we haven't hit all nodes,
+    while(len(S) != len(matrix)+1):
+        # Let us know what iteration we're in
+        print("iteration", len(S), "of", len(matrix))
+        # Get our current max weight, and append that node to S
         max_val = max((i for i in matrix.items() if i[0] not in S), key = lambda t: t[1][0])
         S.append(max_val[0])
+
+        # Nice little early return part. Since we're only looking for one path, rather
+        # than trying to fill out the entire routing table for the source, we return
+        # once we add our desired destination to the selected queues
+        if max_val[0] == destination:
+            break
         # This is the part where we recalculate costs
         # Loop over all destinations
         for dest in person_list:
@@ -36,7 +50,7 @@ def algorithm(matrix, S, person_list, friends_list):
                     weight = get_friendship_weight(source, dest, friends_list)
                     if weight != None:
                         options.append((weight, source))
-                # If we've got any options, set it to the lowest cost one
+                # If we've got any options, set it to the highest weighted one
                 if options:
                     matrix[dest] = max(options, key = lambda t: t[0])
     return matrix, S
@@ -45,13 +59,14 @@ def algorithm(matrix, S, person_list, friends_list):
 def backtrack(matrix, S, source, dest, friends_list):
     # I'm reversing because I personally like it better
     reversed = [S[-i-1] for i in range(len(S))]
+    reverse_chain = []
+    costs = []
     for node in reversed:
         # If we're on the node which is our destination,
         if node == dest:
+            print(" GOT TO NODE ", node)
             try:
                 # Do some setup work to keep track of our backtracking
-                reverse_chain = []
-                costs = []
                 # Immediately set the reverse chain and cost-to-node for dest
                 curr_node = node
                 reverse_chain.append(curr_node)
@@ -64,6 +79,7 @@ def backtrack(matrix, S, source, dest, friends_list):
                     costs.append(weight)
                 reverse_chain.append(source)
             except:
+                print("got an exception")
                 reverse_chain = None
                 costs = None
     return reverse_chain, costs
@@ -86,8 +102,9 @@ def decompress_friends(friends_list):
     return all_friends
 
 def main(friends_list, source, dest):
+    print(dest)
     person_list = decompress_friends(friends_list)
     source, matrix, S = setup_matrix(person_list, friends_list, source)
-    matrix, S = algorithm(matrix, S, person_list, friends_list)
+    matrix, S = algorithm(matrix, S, person_list, friends_list, dest)
     reverse_chain, weights = backtrack(matrix, S, source, dest, friends_list)
     return reverse_chain, weights

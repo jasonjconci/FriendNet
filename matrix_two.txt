@@ -1,3 +1,4 @@
-Jason Daniel 10
-Daniel Jason 10
-Jason Depalma 1
+Jason Depalma 5
+Depalma Daniel 10
+Daniel Schroeder 10
+Schroeder Bowers 5

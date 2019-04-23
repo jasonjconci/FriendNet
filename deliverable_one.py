@@ -20,26 +20,28 @@
 # old fashioned Dijkstra. Makes sense since each "node" knows the costs of every other "edge",
 # and the only thing we've really got to change up is the fact that we'll be taking maxes,
 # rather than mins.
-#
+# 
 # We, initially, think that our two killer features will be as follows.
-# 1.Best Friends
-#   This feature is intended to tell you who your best friends are, by examining all those
+# 1.Best Friends Dashboard
+#       This feature is intended to tell you who your best friends are, by examining all those
 #   people that you're friends with, and finding those with the highest reciprocated friendship
 #   rating. This feature is makes sense logically, is simple to implement, and frankly, is
 #   missing from modern social media. We want to show you where your strongest connections are.
+#       Going off of this, we'll also show you what percentage of your friends reciprocate your
+#   friendship scores, within a threshhold that the user defines. For example, we'll show you how
+#   many of your friends reciprocate your own friendship score within 2 points.
 # 2.Suggested Friends
-#   This feature will be our entire-graph-searching feature. With this feature, you'll be able
+#       This feature will be our entire-graph-searching feature. With this feature, you'll be able
 #   to see who you'd likely be good friends with, based on average scores on friendliest chains.
 #   Basically, we'll traverse the entire network, and see what people are along some of the
 #   friendliest chains that lead back to you, and show you those you aren't already friends with.
-#   
-#   This will involve some sort of Dijkstra-ish graph traversal, but we're not yet sure how we'll
+#       This will involve some sort of Dijkstra-ish graph traversal, but we're not yet sure how we'll
 #   deal with scoring things (example: Someone 2 hops away with an average of 8, shouldn't
-#   necessarily be suggested more highly than someone 5 hops away with an average of 7.5; averages
-#   are hard to maintain over time, so we'll put some thought into this). Maybe we can have different
-#   modes for finding friends - pure average, and "I really want to branch out to new groups" modes.
+#   necessarily be suggested more highly than someone 5 hops away with an average of 7.5. 
+
 
 from friendship import Friendship
+import dijkstra as dj
 import sys
 
 DEBUG = False
@@ -93,6 +95,19 @@ def debug_prints(friendship_list):
     print(get_friendship_weight("Depalma", "Jason", friendship_list))
 
 
+def print_friendlist_path(reverse_path, costs):
+    if reverse_path != None and costs != None and reverse_path != [] and costs != []:
+        i = 0
+        print('\t', end = '')
+        while i < len(reverse_path)-1:
+            print(reverse_path[-i-1], end = ' ')
+            print(' -> ', end = ' ')
+            i+=1
+        print(reverse_path[0])
+        print("\tTOTAL FRIENDLINESS: ", sum(costs))
+        print("\tAVG FRIENDLINESS: ", sum(costs) / len(costs))
+    else:
+        print("\tNo path could be found :(")
 
 #### PORTION FOR PROGRAM DRIVER FUNCTIONS ####
 
@@ -102,20 +117,26 @@ def command_line_interface(friendship_list):
     print("What would you like to do?")
     print("1. Check if user exists ")
     print("2. Check friendship weight between users")
+    print("3. Find friendliest path between users")
     print("Other. Quit")
     answer = input("> ")
-    while answer == "1" or answer == "2":
+    while answer == "1" or answer == "2" or answer == "3":
         if answer == "1":
             username = input("\tWhich user? ")
             print( "\tUser exists" if does_user_exist(username, friendship_list) else "\tUser does not exist")
-        else:
+        elif answer == "2":
             user_one, user_two = tuple(input("\tEnter usernames separated by spaces: ").split())
             weight = get_friendship_weight(user_one, user_two, friendship_list)
             print( "\tFriendship weight is " + str(weight) if weight > -1 else "\tFriendship does not exist")
+        else:
+            user_one, user_two = tuple(input('\tEnter usernames separated by spaces:').split())
+            reverse_path, costs = dj.main(friendship_list, user_one, user_two)
+            print_friendlist_path(reverse_path, costs)
         print()
         print("What would you like to do?")
         print("1. Check if user exists ")
         print("2. Check friendship weight between users")
+        print("3. Find friendliest path between users")
         print("Other. Quit")
         answer = input(">")
 
