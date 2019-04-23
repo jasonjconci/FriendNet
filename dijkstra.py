@@ -1,4 +1,11 @@
-# Placeholder comment
+# Purpose of this file is to find the "friendliest chain" of people from
+# person A to person Z. Takes in parameters friends_list (1D list of friendships)
+# and source and destination "persons" for which we're meant to find a graph.
+#
+# Code: Loading animation stolen from stackoverflow
+#           https://stackoverflow.com/questions/7039114/waiting-animation-in-command-prompt-python
+#       Dijkstra code adopted from Networking class, written by yours truly
+# Don't run this at command line really, it's meant to be a utility file
 
 from friendship import Friendship
 
@@ -25,11 +32,13 @@ def setup_matrix(person_list, friends_list, source):
     return source, matrix, S
 
 def algorithm(matrix, S, person_list, friends_list, destination):
-    print(destination)
+    animation = "|/-\\"
+    idx = 0
     # While we haven't hit all nodes,
     while(len(S) != len(matrix)+1):
+        print('\t',animation[idx % len(animation)], end="\r")
+        idx += 1    
         # Let us know what iteration we're in
-        print("iteration", len(S), "of", len(matrix))
         # Get our current max weight, and append that node to S
         max_val = max((i for i in matrix.items() if i[0] not in S), key = lambda t: t[1][0])
         S.append(max_val[0])
@@ -64,7 +73,6 @@ def backtrack(matrix, S, source, dest, friends_list):
     for node in reversed:
         # If we're on the node which is our destination,
         if node == dest:
-            print(" GOT TO NODE ", node)
             try:
                 # Do some setup work to keep track of our backtracking
                 # Immediately set the reverse chain and cost-to-node for dest
@@ -102,7 +110,6 @@ def decompress_friends(friends_list):
     return all_friends
 
 def main(friends_list, source, dest):
-    print(dest)
     person_list = decompress_friends(friends_list)
     source, matrix, S = setup_matrix(person_list, friends_list, source)
     matrix, S = algorithm(matrix, S, person_list, friends_list, dest)
