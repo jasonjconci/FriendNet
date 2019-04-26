@@ -42,6 +42,7 @@
 
 from friendship import Friendship
 import dijkstra as dj
+import gameify as game
 import sys
 
 DEBUG = False
@@ -118,9 +119,10 @@ def command_line_interface(friendship_list):
     print("1. Check if user exists ")
     print("2. Check friendship weight between users")
     print("3. Find friendliest path between users")
+    print("4. Find a best-friend dashboard")
     print("Other. Quit")
     answer = input("> ")
-    while answer == "1" or answer == "2" or answer == "3":
+    while "1" <= answer <= "5":
         if answer == "1":
             username = input("\tWhich user? ")
             print( "\tUser exists" if does_user_exist(username, friendship_list) else "\tUser does not exist")
@@ -128,15 +130,23 @@ def command_line_interface(friendship_list):
             user_one, user_two = tuple(input("\tEnter usernames separated by spaces: ").split())
             weight = get_friendship_weight(user_one, user_two, friendship_list)
             print( "\tFriendship weight is " + str(weight) if weight > -1 else "\tFriendship does not exist")
-        else:
+        elif answer == "3":
             user_one, user_two = tuple(input('\tEnter usernames separated by spaces:').split())
             reverse_path, costs = dj.main(friendship_list, user_one, user_two)
             print_friendlist_path(reverse_path, costs)
+        else:
+            username = input('\tEnter username whose dashboard you want to see:')
+            highest_reciprocated, percentage_reciprocated = game.main(username, friendship_list)
+            print("\tYour highest reciprocated friends are:")
+            for i in range(len(highest_reciprocated)):
+                print('\t\t' + str(i+1) + '. ' + highest_reciprocated[i].friend_a)
+            print("\tYour reciprocation percentage: %.0f%%" % (percentage_reciprocated * 100))
         print()
         print("What would you like to do?")
         print("1. Check if user exists ")
         print("2. Check friendship weight between users")
         print("3. Find friendliest path between users")
+        print("4. Find a best-friend dashboard")
         print("Other. Quit")
         answer = input(">")
 

@@ -7,6 +7,7 @@
 #       Dijkstra code adopted from Networking class, written by yours truly
 # Don't run this at command line really, it's meant to be a utility file
 
+
 from friendship import Friendship
 
 def setup_matrix(person_list, friends_list, source):
