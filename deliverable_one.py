@@ -43,6 +43,7 @@
 from friendship import Friendship
 import dijkstra as dj
 import gameify as game
+import recommend_friends as recommend
 import sys
 
 DEBUG = False
@@ -120,6 +121,7 @@ def command_line_interface(friendship_list):
     print("2. Check friendship weight between users")
     print("3. Find friendliest path between users")
     print("4. Find a best-friend dashboard")
+    print("5. Find a user's recommended friends")
     print("Other. Quit")
     answer = input("> ")
     while "1" <= answer <= "5":
@@ -134,21 +136,27 @@ def command_line_interface(friendship_list):
             user_one, user_two = tuple(input('\tEnter usernames separated by spaces:').split())
             reverse_path, costs = dj.main(friendship_list, user_one, user_two)
             print_friendlist_path(reverse_path, costs)
-        else:
-            username = input('\tEnter username whose dashboard you want to see:')
+        elif answer == "4":
+            username = input('\tEnter username whose dashboard you want to see: ')
             highest_reciprocated, percentage_reciprocated = game.main(username, friendship_list)
             print("\tYour highest reciprocated friends are:")
             for i in range(len(highest_reciprocated)):
                 print('\t\t' + str(i+1) + '. ' + highest_reciprocated[i].friend_a)
             print("\tYour reciprocation percentage: %.0f%%" % (percentage_reciprocated * 100))
+        else:
+            username = input('\tEnter username whose dashboard you want to see: ')
+            valid = recommend.main(friendship_list, username)
+            for i in range(len(valid)):
+                print('\t\t' + str(i+1) + ". " + valid[i][0] + ", Estimated friendship Weight: %.1f" % (valid[i][1]/float(valid[i][2])))
         print()
         print("What would you like to do?")
         print("1. Check if user exists ")
         print("2. Check friendship weight between users")
         print("3. Find friendliest path between users")
         print("4. Find a best-friend dashboard")
+        print("5. Find a user's recommended friends")
         print("Other. Quit")
-        answer = input(">")
+        answer = input("> ")
 
 
 # Main function
