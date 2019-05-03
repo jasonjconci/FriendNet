@@ -43,6 +43,7 @@ def bfs(friendship_list, user, DEPTH_BOUND = 3):
         # Add curr_node to visited stack so we don't hit it again
         visited.append(curr_node)
 
+
     # Only allow those friendships that don't already exist
     user_friends = [i.friend_b for i in get_friends_of_user(friendship_list, user)]
     valid_endpoints_filtered = [i for i in valid_endpoints if i not in user_friends]
@@ -57,6 +58,9 @@ def bfs(friendship_list, user, DEPTH_BOUND = 3):
         if item[0] not in already_gotten:
             already_gotten.add(item[0])
             valid_endpoints_remove_dupes.append( tuple(item))
+
+    # Only return the top 5 recommended friends
+    # We do this here to ensure highest weight, no dupes, etc
     return valid_endpoints_remove_dupes[:5]
 
 

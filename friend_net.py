@@ -139,10 +139,10 @@ def command_line_interface(friendship_list):
         elif answer == "4":
             username = input('\tEnter username whose dashboard you want to see: ')
             highest_reciprocated, percentage_reciprocated = game.main(username, friendship_list)
-            print("\tYour highest reciprocated friends are:")
+            print("\tYour highest reciprocated friendships are with:")
             for i in range(len(highest_reciprocated)):
                 print('\t\t' + str(i+1) + '. ' + highest_reciprocated[i].friend_a)
-            print("\tYour reciprocation percentage: %.0f%%" % (percentage_reciprocated * 100))
+            print("\tYour reciprocation percentage (geq yours): %.0f%%" % (percentage_reciprocated * 100))
         else:
             username = input('\tEnter username whose dashboard you want to see: ')
             valid = recommend.main(friendship_list, username)

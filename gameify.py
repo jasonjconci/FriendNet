@@ -10,9 +10,9 @@ def highest_scoring(source, friendship_list):
     initial = [i for i in friendship_list if i.friend_a == source]
     eligible = []
     for each in initial:
-        reversed = Friendship(each.friend_b, source, -1)
+        rev = Friendship(each.friend_b, source, -1)
         try:
-            ix = friendship_list.index(reversed)
+            ix = friendship_list.index(rev)
             # The friendship is reciprocated; add the reciprocated friendship
             eligible.append(friendship_list[ix])
         except:
@@ -46,7 +46,7 @@ def percent_reciprocate(source, friendship_list):
     return num_geq, num_less, num_total
 
 def main(user, friendship_list):
-    x = 1
+    assert [i for i in friendship_list if i.friend_a == user], "Invalid user"
     highest_reciprocated = highest_scoring(user, friendship_list)
     num_geq, _, num_total = percent_reciprocate(user, friendship_list)
     return highest_reciprocated, (float(num_geq) / float(num_total))
